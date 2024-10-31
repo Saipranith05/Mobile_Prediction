@@ -15,12 +15,13 @@ screen_on_time = st.number_input("Please enter your Screen On Time: ")
 number_of_apps_installed = st.number_input("Please enter your number of apps installed: ")
 data_usage = st.number_input("Please enter your Data Usage: ")
 age = st.number_input("Please enter your Age:")
+user_behavior_class = st.number_input("Please enter your User Begaviour Class: ")
 
 operating_system = st.selectbox("Operating System(0:Android, 1:ios)", [0,1])
 
 if st.button('predict'):
     features = np.array([[user_id, device_model, app_usage_time, screen_on_time, battery_drain,
-                         number_of_apps_installed, data_usage, age, operating_system ]])
+                         number_of_apps_installed, data_usage, age, operating_system, user_behavior_class ]])
     
     output = model.predict(features)
     st.write(f"Gender Prediction: {'Male' if output == 1 else 'Female'}")
