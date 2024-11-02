@@ -4,6 +4,9 @@ import numpy as np
 
 model = joblib.load("Tips.pkl")
 
+st.title("Tip Predictor")
+st.image("download.jpeg")
+
 Total_Bill = st.number_input("Please enter your total_bill: ")
 Sex = st.selectbox("sex(0:Male, 1:Female)", [0,1])
 Smoker = st.selectbox('smoker(0:Yes, 1:NO)', [0,1])
