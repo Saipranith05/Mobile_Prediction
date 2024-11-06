@@ -8,7 +8,7 @@ st.title("Tip Predictor")
 st.image("download.jpeg")
 
 Total_Bill = st.number_input("Please enter your total_bill: ")
-Sex = st.selectbox("sex(0:Male, 1:Female)", [0,1])
+Sex = st.selectbox("sex(0:Male, 1:Female)", ["Male","Female"])
 Smoker = st.selectbox('smoker(0:Yes, 1:NO)', [0,1])
 Day = st.selectbox("day(0:Thur, 1:Fri, 2:Sat, 3:Sun)", [0,1,2,3])
 Time = st.selectbox("time(0:Lunch, 1:Dinner)", [0,1])
