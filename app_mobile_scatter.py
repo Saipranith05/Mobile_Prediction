@@ -75,7 +75,7 @@ with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
             if "Device Model" in df.columns and "Gender" in df.columns:
                 # Plot using matplotlib for more control
                 plt.figure(figsize=(10, 6))
-                plt.plot(df["Device Model"], df["Gender"], c='blue')  # Use color of your choice
+                plt.scatter(df["Device Model"], df["Gender"], c=df["Gender"], cmap="coolwarm")  # Hue based on Gender
                 plt.title("Device Model vs Gender")
                 plt.xlabel("Device Model")
                 plt.ylabel("Gender")
@@ -115,18 +115,18 @@ if st.button('Predict Gender'):
     output = model.predict(features)
     gender = 'Male' if output == 1 else 'Female'
 
-    # Visualization: Bar plot (Reduce size of the plot)
-    fig, ax = plt.subplots(figsize=(5, 4))  # Reduced size
+    # Visualization: Scatter plot with hue (color coding)
+    fig, ax = plt.subplots(figsize=(6, 5))  # Slightly smaller plot
 
-    # Bar plot for Male and Female
-    ax.bar(['Male', 'Female'], [1 if gender == 'Male' else 0, 1 if gender == 'Female' else 0], 
-           color=['#007bff', '#f8b400'])
+    # Scatter plot for Male and Female
+    ax.scatter([0], [1] if gender == 'Male' else [0], c=['#007bff' if gender == 'Male' else '#f8b400'], s=100, label=gender)
     
     # Set the title and labels
     ax.set_title(f'Predicted Gender: {gender}')
     ax.set_ylabel('Probability')
-    ax.set_ylim(0, 1)  # Set y-axis from 0 to 1 for probability
+    ax.set_ylim(-0.1, 1.1)  # Set y-axis from -0.1 to 1.1 for better visibility
+    ax.set_xticks([0])
+    ax.set_xticklabels([gender])
     
-    # Display the bar plot
+    # Display the scatter plot
     st.pyplot(fig)
-
