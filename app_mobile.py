@@ -4,6 +4,7 @@ import joblib
 import pandas as pd
 import zipfile
 import io
+import matplotlib.pyplot as plt
 
 # Load your model
 model = joblib.load("Mobiles.pkl")
@@ -48,50 +49,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Main app
-#st.markdown("<div class='container'>", unsafe_allow_html=True)
-
 st.title("📱 Mobile Hunt")
 st.info("This app builds a machine learning model!")
 st.image("image.jpeg", use_column_width=True)
 
-import streamlit as st
-import pandas as pd
-import zipfile
-import io
-import matplotlib.pyplot as plt
-
-# Path to the zip file
-zip_file_path = r"C:\Users\Akshitha\OneDrive\New folder\ExamScore.Prediction\archive (3).zip"
-
-# Extract and read the CSV from the zip file
-with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-    # List all files in the zip and find CSVs
-    csv_files = [f for f in zip_ref.namelist() if f.endswith('.csv')]
-    
-    if csv_files:
-        # Read the first CSV file in the zip
-        with zip_ref.open(csv_files[0]) as csv_file:
-            df = pd.read_csv(csv_file)
-
-        # Use Streamlit's expander for data visualization
-        with st.expander("Data visualization"):
-            st.write("Scatter plot of Device Model vs Gender")
-            
-            # Ensure columns exist before plotting
-            if "Device Model" in df.columns and "Gender" in df.columns:
-                # Plot using matplotlib for more control
-                plt.figure(figsize=(10, 6))
-                plt.plot(df["Device Model"], df["Gender"], c='blue')  # Use color of your choice
-                plt.title("Device Model vs Gender")
-                plt.xlabel("Device Model")
-                plt.ylabel("Gender")
-                st.pyplot(plt)
-            else:
-                st.error("The columns 'Device Model' or 'Gender' do not exist in the dataset.")
-    else:
-        st.error("No CSV file found in the zip file.")
-
-
+# User input section
 user_id = st.number_input("Please enter your ID:", min_value=0)
 device_model = st.selectbox(
     "Device Model",
@@ -123,4 +85,8 @@ if st.button('Predict Gender'):
     # Display result
     st.markdown(f"<h3 style='text-align: center;'>Gender Prediction: {gender}</h3>", unsafe_allow_html=True)
 
-st.markdown("</div>", unsafe_allow_html=True)
+    # Visualization
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.pie([1, 1], labels=['Male', 'Female'], autopct='%1.1f%%', startangle=90, colors=['#007bff', '#f8b400'])
+    ax.set_title('Predicted Gender Distribution')
+    st.pyplot(fig)
