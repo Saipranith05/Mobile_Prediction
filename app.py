@@ -1,6 +1,9 @@
 import streamlit as st
 import numpy as np
 import joblib
+import pandas as pd
+import zipfile
+import io
 
 # Load your model
 model = joblib.load("Mobiles.pkl")
@@ -45,17 +48,48 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Main app
-st.markdown("<div class='container'>", unsafe_allow_html=True)
+#st.markdown("<div class='container'>", unsafe_allow_html=True)
 
 st.title("📱 Mobile Hunt")
+st.info("This app builds a machine learning model!")
 st.image("image.jpeg", use_column_width=True)
 
-# Input fields with placeholders for better UX
+import streamlit as st
+import pandas as pd
+import zipfile
+import io
+
+# Path to the zip file
+zip_file_path = r"C:\Users\Akshitha\OneDrive\New folder\ExamScore.Prediction\archive (3).zip"
+
+# Extract and read the CSV from the zip file
+with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+    # List all files in the zip and find CSVs
+    csv_files = [f for f in zip_ref.namelist() if f.endswith('.csv')]
+    
+    if csv_files:
+        # Read the first CSV file in the zip
+        with zip_ref.open(csv_files[0]) as csv_file:
+            df = pd.read_csv(csv_file)
+
+        # Use Streamlit's expander for data visualization
+        with st.expander("Data visualization"):
+            st.write("Scatter plot of device_model vs gender")
+            
+            # Ensure columns exist before plotting
+            if "device_model" in df.columns and "gender" in df.columns:
+                st.scatter_chart(data=df, x="Device Model", y="Gender")
+            else:
+                st.error("The columns 'device_model' or 'gender' do not exist in the dataset.")
+    else:
+        st.error("No CSV file found in the zip file.")
+
+
 user_id = st.number_input("Please enter your ID:", min_value=0)
 device_model = st.selectbox(
     "Device Model",
     [0, 1, 2, 3, 4],
-    format_func=lambda x: ["Xiaomi Mi 11", "iPhone 12", "Google Pixel 5", "OnePlus 9", "Samsung Galaxy S21"][x]
+    format_func=lambda x: ["Xiaomi", "iPhone", "Google", "OnePlus", "Samsung "][x]
 )
 app_usage_time = st.number_input("App Usage Time (in hours):", min_value=0.0)
 battery_drain = st.number_input("Battery Drain (%):", min_value=0.0)
