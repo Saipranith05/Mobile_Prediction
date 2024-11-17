@@ -72,16 +72,19 @@ with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
             st.write("Scatter plot of Device Model vs Gender")
             
             # Ensure columns exist before plotting
-            if "Device Model" in df.columns and "Gender" in df.columns:
+            if "Device Model" in df.columns and "Gender" in df.columns and "Age" in df.columns:
                 # Plot using matplotlib for more control
                 plt.figure(figsize=(10, 6))
-                plt.scatter(df["Device Model"], df["Gender"], c=df["Gender"], cmap="coolwarm")  # Hue based on Gender
-                plt.title("Device Model vs Gender")
+                scatter = plt.scatter(df["Device Model"], df["Gender"], c=df["Age"], cmap="viridis", s=100)
+                
+                # Add colorbar to indicate age values
+                plt.colorbar(scatter, label="Age")
+                plt.title("Device Model vs Gender with Age Hue")
                 plt.xlabel("Device Model")
                 plt.ylabel("Gender")
                 st.pyplot(plt)
             else:
-                st.error("The columns 'Device Model' or 'Gender' do not exist in the dataset.")
+                st.error("The columns 'Device Model', 'Gender' or 'Age' do not exist in the dataset.")
     else:
         st.error("No CSV file found in the zip file.")
 
@@ -115,11 +118,11 @@ if st.button('Predict Gender'):
     output = model.predict(features)
     gender = 'Male' if output == 1 else 'Female'
 
-    # Visualization: Scatter plot with hue (color coding)
+    # Visualization: Scatter plot with Age as hue
     fig, ax = plt.subplots(figsize=(6, 5))  # Slightly smaller plot
 
     # Scatter plot for Male and Female
-    ax.scatter([0], [1] if gender == 'Male' else [0], c=['#007bff' if gender == 'Male' else '#f8b400'], s=100, label=gender)
+    ax.scatter([0], [1] if gender == 'Male' else [0], c=[age], cmap="viridis", s=100, label=gender)
     
     # Set the title and labels
     ax.set_title(f'Predicted Gender: {gender}')
@@ -128,5 +131,9 @@ if st.button('Predict Gender'):
     ax.set_xticks([0])
     ax.set_xticklabels([gender])
     
+    # Add colorbar to indicate age values
+    fig.colorbar(ax.collections[0], ax=ax, label="Age")
+    
     # Display the scatter plot
     st.pyplot(fig)
+
